@@ -1,0 +1,21 @@
+wall
+====
+not quite bleeding-edge wlroots, wayland (server), and xkb bindings for go; part of the concorde cross-protocol window system: by supporting the wayland backend.
+
+ACHTUNG! these bindings are NOT general-purpose (yet) hence there is no guarantee that they will be sufficient for your use case.
+
+compiling:
+----------
+install a `wlroots` version between 0.20.0 and 0.21 (exclusive), `wayland`, `libxkbcommon`, and `pkg-config` via your preferred package manager.
+
+on arch, wlroots is split into different packages per minor release number; install `wlroots0.20`.
+on void, install `wlroots-devel`, `wayland-devel`, and `libxkbcommon-devel`.
+on gentoo/exherbo, at least ensure that the `x11-backend` USE flag is set for `wlroots` and set the `wayland`, `X`, and `xwayland` USE flags globally or for all relevant packages.
+
+there is a tinywl implementation in `cmd/tinywl` that can be built with `go build`.
+
+prior art:
+----------
+https://github.com/DeedleFake/wlr
+https://github.com/swaywm/go-wlroots
+https://gitlab.freedesktop.org/wlroots/wlroots/-/blob/0.20/tinywl/tinywl.c
