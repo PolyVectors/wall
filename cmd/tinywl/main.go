@@ -1,8 +1,9 @@
 package main
 
 import (
-	"wall/wl"
-	"wall/wlr"
+	"fmt"
+
+	"wall"
 )
 
 type CursorMode int
@@ -14,59 +15,74 @@ const (
 )
 
 type Toplevel struct {
-	link              wl.List
+	link              wall.List
 	server            *Server
-	xdgToplevel       wlr.XDGToplevel
-	sceneTree         wlr.SceneTree
-	mapped            wl.Listener
-	unmap             wl.Listener
-	commit            wl.Listener
-	destroy           wl.Listener
-	requestMove       wl.Listener
-	requestResize     wl.Listener
-	requestMaximize   wl.Listener
-	requestFullscreen wl.Listener
+	xdgToplevel       wall.XDGToplevel
+	sceneTree         wall.SceneTree
+	mapped            wall.Listener
+	unmap             wall.Listener
+	commit            wall.Listener
+	destroy           wall.Listener
+	requestMove       wall.Listener
+	requestResize     wall.Listener
+	requestMaximize   wall.Listener
+	requestFullscreen wall.Listener
 }
 
 type Server struct {
-	display     wl.Display
-	backend     wlr.Backend
-	renderer    wlr.Renderer
-	allocator   wlr.Allocator
-	scene       wlr.Scene
-	sceneLayout wlr.SceneOutputLayout
+	display     wall.Display
+	backend     wall.Backend
+	renderer    wall.Renderer
+	allocator   wall.Allocator
+	scene       wall.Scene
+	sceneLayout wall.SceneOutputLayout
 
-	xdgShell       wlr.XDGShell
-	newXdgToplevel wl.Listener
-	newXdgPopup    wl.Listener
+	xdgShell       wall.XDGShell
+	newXdgToplevel wall.Listener
+	newXdgPopup    wall.Listener
 	// could this be a shim to containers/list or a dynamic array when possible?
-	toplevels wl.List
+	toplevels wall.List
 
-	cursor               wlr.Cursor
-	cursorManager        wlr.XCursorManager
-	cursorMotion         wl.Listener
-	cursorMotionAbsolute wl.Listener
-	cursorButton         wl.Listener
-	cursorAxis           wl.Listener
-	cursorFrame          wl.Listener
+	cursor               wall.Cursor
+	cursorManager        wall.XCursorManager
+	cursorMotion         wall.Listener
+	cursorMotionAbsolute wall.Listener
+	cursorButton         wall.Listener
+	cursorAxis           wall.Listener
+	cursorFrame          wall.Listener
 
-	seat                wlr.Seat
-	newInput            wl.Listener
-	requestCursor       wl.Listener
-	pointerFocusChange  wl.Listener
-	requestSetSelection wl.Listener
-	keyboards           wl.List
+	seat                wall.Seat
+	newInput            wall.Listener
+	requestCursor       wall.Listener
+	pointerFocusChange  wall.Listener
+	requestSetSelection wall.Listener
+	keyboards           wall.List
 	cursorMode          CursorMode
 	grabbedToplevel     *Toplevel
 	grabX, grabY        float64
-	grabGeobox          wlr.Box
+	grabGeobox          wall.Box
 	resizeEdges         uint32
 
-	outputLayout wlr.OutputLayout
+	outputLayout wall.OutputLayout
 	// ditto shim idea
-	outputs   wl.List
-	newOutput wl.Listener
+	outputs   wall.List
+	newOutput wall.Listener
+}
+
+func NewServer() (s *Server, e error) {
+	s = new(Server)
+
+	s.display = wall.NewDisplay()
+	s.backend = s.display.GetEventLoop().BackendAutocreate(nil)
+
+	return
 }
 
 func main() {
+	server, err := NewServer()
+	if err != nil {
+		panic(fmt.Sprintf("failed to create server: %s", err))
+	}
+
+	fmt.Printf("%p", server)
 }
